@@ -1,91 +1,62 @@
-const res = document.getElementById("result");
-const toast = document.getElementById("toast");
-
-function calculate(value) {
-    const calculatedValue = eval(value || null);
-    if (isNaN(calculatedValue)) {
-        res.value = "Bah non, pas de division par 0 !";
+class Calculatrice {
+    constructor() {
+      this.res = document.getElementById("result");
+      this.toast = document.getElementById("toast");
+      document.addEventListener("keydown", this.keyboardInputHandler.bind(this));
+    }
+  
+    calculate(value) {
+      const calculatedValue = eval(value || null);
+      if (isNaN(calculatedValue)) {
+        this.res.value = "Bah non, pas de division par 0 !";
         setTimeout(() => {
-            res.value = "";
+          this.res.value = "";
         }, 1300);
-    } else {
-        res.value = calculatedValue;
-    }
-}
-
-// Afficher la valeur dans l'écran
-function liveScreen(enteredValue) {
-    if (!res.value) {
-        res.value = "";
-    }
-    res.value += enteredValue;
-}
-
-//ajout d'un gestionnaire d'événements sur le document pour gérer les entrées clavier
-document.addEventListener("keydown", keyboardInputHandler);
-
-//fonction permettant de gérer les entrées au clavier
-function keyboardInputHandler(e) {
-    // pour corriger le comportement par défaut du navigateur,
-    // Les touches Entrée et Retour arrière provoquaient un comportement indésirable lorsqu'une touche était déjà au centre de l'écran.
-    e.preventDefault();
-    //saisir l'écran en direct
-
-    // chiffres
-    if (e.key === "0") {
-        res.value += "0";
-    } else if (e.key === "1") {
-        res.value += "1";
-    } else if (e.key === "2") {
-        res.value += "2";
-    } else if (e.key === "3") {
-        res.value += "3";
-    } else if (e.key === "4") {
-        res.value += "4";
-    } else if (e.key === "5") {
-        res.value += "5";
-    } else if (e.key === "6") {
-        res.value += "6";
-    } else if (e.key === "7") {
-        res.value += "7";
-    } else if (e.key === "7") {
-        res.value += "7";
-    } else if (e.key === "8") {
-        res.value += "8";
-    } else if (e.key === "9") {
-        res.value += "9";
+      } else {
+        this.res.value = calculatedValue;
+      }
     }
 
-    //opérateurs
-    if (e.key === "+") {
-        res.value += "+";
-    } else if (e.key === "-") {
-        res.value += "-";
-    } else if (e.key === "*") {
-        res.value += "*";
-    } else if (e.key === "/") {
-        res.value += "/";
+    clear() {
+        this.res.value = "";
     }
 
-    //chiffre décimal
-    if (e.key === ".") {
-        res.value += ".";
+    delete() {
+        this.res.value = this.res.value.slice(0, -1);
     }
-
-    //clear
-    if (e.which === 27) {
-        res.value = "";
+  
+    liveScreen(enteredValue) {
+      if (!this.res.value) {
+        this.res.value = "";
+      }
+      this.res.value += enteredValue;
     }
-
-    //appuyez sur la touche Entrée pour calculer
-    if (e.key === "Enter") {
-        calculate(result.value);
+  
+    keyboardInputHandler(e) {
+      e.preventDefault();
+  
+      if (e.key.match(/[0-9]/)) {
+        this.liveScreen(e.key);
+      }
+  
+      if (["+", "-", "*", "/", "."].includes(e.key)) {
+        this.liveScreen(e.key);
+      }
+  
+      if (e.which === 27) {
+        this.res.value = "";
+      }
+  
+      if (e.key === "Enter") {
+        this.calculate(this.res.value);
+      }
+  
+      if (e.key === "Backspace") {
+        const resultInput = this.res.value;
+        this.res.value = resultInput.substring(0, this.res.value.length - 1);
+      }
     }
-
-    //retour pour effacer
-    if (e.key === "Backspace") {
-        const resultInput = res.value;
-        //effacer le dernier caractère
-        res.value = resultInput.substring(0, res.value.length - 1);
-    }
-}
+  }
+  
+  const calculatrice = new Calculatrice();
+  
