@@ -1,7 +1,6 @@
 class Calculatrice {
     constructor() {
       this.res = document.getElementById("result");
-      this.toast = document.getElementById("toast");
       document.addEventListener("keydown", this.keyboardInputHandler.bind(this));
     }
   
